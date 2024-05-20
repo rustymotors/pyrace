@@ -1,33 +1,30 @@
-import socket
-import signal
-import sys
+import logging
+import sentry_sdk
 
-from pyrace.client_thead import client_thread
-
-def signal_handler(signal, frame):
-    print('You pressed Ctrl+C!')
-    sys.exit(0)
-    
-
+from pyrace.shared.encryption import verifyLegacyCipherSupport
 
 def main():
+    corelogger = logging.getLogger(__name__)
     
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    try:
+        verifyLegacyCipherSupport()
+    except Exception as e:
+        corelogger.error("Error in core sever: %s", e)
+        return 1
     
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # bind the socket to a public host, and a well-known port
-    serversocket.bind(("0.0.0.0", 3000))
-    # become a server socket
-    serversocket.listen(5)
 
-    while True:
-        # accept connections from outside
-        (clientsocket, address) = serversocket.accept()
-        # now do something with the clientsocket
-        # in this case, we'll pretend this is a threaded server
-        ct = client_thread(clientsocket)
-        ct.run()
-
+    sentry_sdk.init(
+        dsn="https://67febaa0a5343792fce8a0750fc12152@o1413557.ingest.us.sentry.io/4507288238358528",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
+    
+    return 0
 
 if __name__ == "__main__":
     main()
