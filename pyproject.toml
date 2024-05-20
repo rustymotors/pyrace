@@ -12,7 +12,7 @@ sentry-sdk = "2.2.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.1"
-
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core"]

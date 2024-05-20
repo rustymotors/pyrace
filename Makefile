@@ -15,13 +15,13 @@ certs:
 	@echo "certs regenerated. remember to update pub.key for all clients"
 
 test:
-	@cargo test
+	@pytest --cov=pyrace --cov-report=term-missing && python -m coverage xml
 
-build:
-	@cargo build
+install:
+	@poetry install
 
 start:
-	@EXTERNAL_HOST=mcouniverse.com PRIVATE_KEY_FILE=data/private_key.pem CERTIFICATE_FILE=data/mcouniverse.crt PUBLIC_KEY_FILE=data/pub.key LOG_LEVEL=trace cargo run
+	@python main.py
 
 up:
 	docker-compose up -d --build
