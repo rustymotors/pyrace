@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 cryptography= "42.0.7"
 sentry-sdk = "2.2.0"
+curtsies = "^0.4.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.1"

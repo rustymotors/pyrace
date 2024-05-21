@@ -1,20 +1,18 @@
-import curses
-import logging
+from curtsies.input import Input
 import os
-from pyrace.config import configuration
+from pyrace.shared.config import getConfig
 import sentry_sdk
+import threading
 
 from pyrace.shared.encryption import verifyLegacyCipherSupport
+from pyrace.gateway.gateway import getGateway
+from pyrace.shared.logging import getLogger
 
-def main(win):
-    corelogger = logging.getLogger(__name__)
-    corelogger.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    corelogger.addHandler(logging.StreamHandler())
-    
-    print("Starting core server")
+
+def main():
+    corelogger = getLogger(None)
+
+    corelogger.info("Starting core server")
 
     try:
         verifyLegacyCipherSupport()
@@ -32,32 +30,56 @@ def main(win):
         # We recommend adjusting this value in production.
         profiles_sample_rate=1.0,
     )
-    
+
+    configLogger = corelogger.getChild("config")
+
+    configuration = getConfig(logger=configLogger)
+
     corelogger.info(
         "Starting core server with the following configuration: %s", configuration
     )
-    
-    appLogger = logging.getLogger("pyrace")
-    
-    win.nodelay(True)
-    key=""
-    win.clear()                
-    win.addstr("Detected key:")
-    win.clear()                
-    win.addstr("Detected key:")
-    
-    while 1:          
-        try:                 
-           key = win.getkey()         
-           win.addstr(str(key)) 
-           if key == os.linesep:
-              break           
-        except Exception as e:
-           # No input   
-           pass 
+
+    listeningPorts = [
+        6660,
+        7003,
+        8228,
+        8226,
+        8227,
+        9000,
+        9001,
+        9002,
+        9003,
+        9004,
+        9005,
+        9006,
+        9007,
+        9008,
+        9009,
+        9010,
+        9011,
+        9012,
+        9013,
+        9014,
+        43200,
+        43300,
+        43400,
+        53303,
+    ]
+
+    gatewayServer = getGateway(config=configuration, portList=listeningPorts)
+    gatewayServer.start()
+
+    reactor = Input()
+
+    with reactor:
+        for e in reactor:
+            if e == "x":
+                break
+            print(repr(e))
 
     return 0
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    main()
+    # curses.wrapper(main)

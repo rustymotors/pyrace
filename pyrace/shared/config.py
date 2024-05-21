@@ -1,5 +1,7 @@
 import os
 
+from .logging import getLogger
+
 default_config = {
     "EXTERNAL_HOST": "localhost",
     "CERTIFICATE_FILE": "certificates/certificate.pem",
@@ -8,13 +10,11 @@ default_config = {
 }
 
 
-class Config:
-    EXTERNAL_HOST = None
-    CERTIFICATE_FILE = None
-    PRIVATE_KEY_FILE = None
-    PUBLIC_KEY_FILE = None
+class __Config:
 
-    def __init__(self):
+    def __init__(self, logger):
+        self.logger = logger
+
         self.EXTERNAL_HOST = os.getenv("EXTERNAL_HOST", default_config["EXTERNAL_HOST"])
         self.CERTIFICATE_FILE = os.getenv(
             "CERTIFICATE_FILE", default_config["CERTIFICATE_FILE"]
@@ -25,6 +25,7 @@ class Config:
         self.PUBLIC_KEY_FILE = os.getenv(
             "PUBLIC_KEY_FILE", default_config["PUBLIC_KEY_FILE"]
         )
+        self.logger.info("Configuration loaded")
 
     def __str__(self):
         return str(
@@ -35,3 +36,13 @@ class Config:
                 "PUBLIC_KEY_FILE": self.PUBLIC_KEY_FILE,
             }
         )
+
+
+__configInstance = None
+
+
+def getConfig(logger=getLogger("shared.config")):
+    global __configInstance
+    if __configInstance is None:
+        __configInstance = __Config(logger=logger)
+    return __configInstance
