@@ -42,6 +42,16 @@ __configInstance = None
 
 
 def getConfig(logger=getLogger("shared.config")):
+    """
+    Retrieves the configuration instance.
+
+    Args:
+        logger (Logger, optional): The logger instance to use for logging. Defaults to getLogger("shared.config").
+
+    Returns:
+        __configInstance (__Config): The configuration instance.
+
+    """
     global __configInstance
     if __configInstance is None:
         __configInstance = __Config(logger=logger)
