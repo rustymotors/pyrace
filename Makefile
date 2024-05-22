@@ -23,6 +23,9 @@ install:
 start:
 	@python main.py
 
+start-web:
+	@python web/manage.py runserver 0.0.0.0:3000
+
 up:
 	docker-compose up -d --build
 
