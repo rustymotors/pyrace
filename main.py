@@ -1,8 +1,6 @@
-from curtsies.input import Input
-import os
+from distutils import core
 from pyrace.shared.config import getConfig
 import sentry_sdk
-import threading
 
 from pyrace.shared.encryption import verifyLegacyCipherSupport
 from pyrace.gateway.gateway import getGateway
@@ -66,18 +64,12 @@ def main():
         53303,
     ]
 
-    gatewayServer = getGateway(config=configuration, portList=listeningPorts)
+    gatewayServer = getGateway(
+        config=configuration,
+        logger=corelogger.getLogger("gateway"),
+        portList=listeningPorts,
+    )
     gatewayServer.start()
-
-    reactor = Input()
-
-    with reactor:
-        for e in reactor:
-            if e == "x":
-                break
-            print(repr(e))
-
-    return 0
 
 
 if __name__ == "__main__":

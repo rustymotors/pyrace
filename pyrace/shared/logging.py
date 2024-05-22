@@ -11,6 +11,7 @@ class __Logger:
         self.level = level
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
+        self.logger.propagate = False
         handler = logging.StreamHandler()
         handler.setFormatter(
             logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
