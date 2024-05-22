@@ -31,7 +31,7 @@ def main():
         profiles_sample_rate=1.0,
     )
 
-    configLogger = corelogger.getChild("config")
+    configLogger = corelogger.getLogger("config")
 
     configuration = getConfig(logger=configLogger)
 
