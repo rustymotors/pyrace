@@ -12,6 +12,8 @@ sentry-sdk = "2.2.0"
 curtsies = "^0.4.2"
 django = "^5.0.6"
 psycopg = "^3.1.19"
+twisted = {version = "^24.3.0", extras = ["tls"]}
+
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.1"

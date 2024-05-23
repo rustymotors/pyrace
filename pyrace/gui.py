@@ -48,5 +48,3 @@ for child in mainframe.winfo_children():
 
 feet_entry.focus()
 root.bind("<Return>", calculate)
-
-root.mainloop()
