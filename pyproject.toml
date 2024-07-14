@@ -10,7 +10,7 @@ python = "^3.11"
 cryptography= "42.0.8"
 sentry-sdk = "2.7.1"
 curtsies = "^0.4.2"
-django = "^5.0.6"
+django = "^5.0.7"
 psycopg = "^3.1.19"
 twisted = {version = "^24.3.0", extras = ["tls"]}
 
