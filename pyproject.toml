@@ -38,8 +38,6 @@ dependencies = [
     "sentry-sdk==2.9.0",
     "curtsies<1.0.0,>=0.4.2",
     "django<6.0.0,>=5.0.6",
-    "psycopg<4.0.0,>=3.1.19",
-    "twisted[tls]<25.0.0,>=24.3.0",
 ]
 name = "pyrace"
 version = "0.1.0"
