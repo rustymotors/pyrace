@@ -17,6 +17,7 @@
 import tkinter
 from tkinter import StringVar, Tk, ttk, Text
 
+
 def addLogMessage(message: str):
     logText.configure(state="normal")
     logText.insert(tkinter.END, f"{message}\n")

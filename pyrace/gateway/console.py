@@ -21,12 +21,8 @@ from pyrace.shared.logging import getLogger
 
 
 class ConsoleThread(Thread, ServerBase):
-    
-    def __init__(
-        self,
-        parentThread: ServerBase,
-        logger = getLogger("console")
-    ) -> None:
+
+    def __init__(self, parentThread: ServerBase, logger=getLogger("console")) -> None:
         Thread.__init__(self)
         self.parentThread = parentThread
         self.logger = logger
@@ -35,12 +31,12 @@ class ConsoleThread(Thread, ServerBase):
         pass
 
     def run(self) -> None:
-        
+
         if self.shutdownRequested:
             return
-        
+
         reactor = Input()
-        
+
         self.logger.info("Started console thread")
 
         with reactor:
