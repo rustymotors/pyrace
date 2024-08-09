@@ -7,18 +7,41 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-cryptography= "42.0.8"
+cryptography = "42.0.8"
 sentry-sdk = "2.9.0"
 curtsies = "^0.4.2"
 django = "^5.0.6"
 psycopg = "^3.1.19"
-twisted = {version = "^24.3.0", extras = ["tls"]}
+twisted = { version = "^24.3.0", extras = ["tls"] }
 
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.1"
 pytest-cov = "^5.0.0"
 
+
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+test = ["pytest<9.0.0,>=8.2.1", "pytest-cov<6.0.0,>=5.0.0"]
+
+[tool.pdm.build]
+includes = []
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+authors = [{ name = "Molly Draven", email = "drazi@duck.com" }]
+requires-python = "<4.0,>=3.11"
+dependencies = [
+    "cryptography==42.0.8",
+    "sentry-sdk==2.9.0",
+    "curtsies<1.0.0,>=0.4.2",
+    "django<6.0.0,>=5.0.6",
+    "psycopg<4.0.0,>=3.1.19",
+    "twisted[tls]<25.0.0,>=24.3.0",
+]
+name = "pyrace"
+version = "0.1.0"
+description = ""
+readme = "README.md"
