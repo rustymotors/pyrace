@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-cryptography = "42.0.8"
+cryptography = "43.0.0"
 sentry-sdk = "2.12.0"
 curtsies = "^0.4.2"
 django = "^5.0.6"
@@ -44,7 +44,7 @@ build-backend = "pdm.backend"
 authors = [{ name = "Molly Draven", email = "drazi@duck.com" }]
 requires-python = "<4.0,>=3.11"
 dependencies = [
-    "cryptography==42.0.8",
+    "cryptography==43.0.0",
     "sentry-sdk==2.12.0",
     "curtsies<1.0.0,>=0.4.2",
     "django<6.0.0,>=5.0.6",
