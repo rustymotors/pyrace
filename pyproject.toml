@@ -45,3 +45,4 @@ name = "pyrace"
 version = "0.1.0"
 description = ""
 readme = "README.md"
+license = { file = "LICENSE.txt" }
