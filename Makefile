@@ -22,7 +22,7 @@ lint:
 
 
 test:
-	@pytest --cov=pyrace --cov-report=term-missing && python -m coverage xml
+	@pdm run pytest --cov=pyrace --cov-report=term-missing && python -m coverage xml
 
 install:
 	@pdm install
