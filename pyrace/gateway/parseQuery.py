@@ -1,35 +1,11 @@
 from sentry_sdk import capture_exception
+from urllib.parse import urlparse, parse_qs
 
 
 def parseQuery(path):
-    """
-    Parses the query string from the URL path and returns a dictionary of key-value pairs.
-    Returns:
-        dict: A dictionary containing the parsed query parameters.
-    Raises:
-        Exception: If an error occurs during parsing.
-    """
-    # code implementation
     try:
-        queryDict = {}
-
-        if "?" not in path:
-            return queryDict
-
-        pathParts = path.split("?")
-
-        if len(pathParts) == 0:
-            return queryDict
-
-        query = pathParts[1]
-        queryParts = query.split("&")
-
-        if len(queryParts) == 0:
-            return queryDict
-
-        for part in queryParts:
-            key, value = part.split("=")
-            queryDict[key] = value
-        return queryDict
+        queryDict = parse_qs(urlparse(path).query)
+        return {k: v[0] for k, v in queryDict.items()}
     except Exception as e:
         capture_exception(e)
+        return {}

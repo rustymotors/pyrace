@@ -24,5 +24,10 @@ def test_parseQuery():
 
     # Test case 5: Path with query parameter containing special characters
     path = "/example?param1=value1&param2=value%20with%20spaces"
-    expected_result = {"param1": "value1", "param2": "value%20with%20spaces"}
+    expected_result = {"param1": "value1", "param2": "value with spaces"}
+    assert parseQuery(path) == expected_result
+    
+    # Test case 6: Malformed query string
+    path = "/example?param1=value1&param2"
+    expected_result = {"param1": "value1"}
     assert parseQuery(path) == expected_result
