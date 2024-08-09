@@ -15,14 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
-from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
-from re import T
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
-from webbrowser import get
 
 from pyrace.base import ServerBase
 from pyrace.gateway.console import ConsoleThread
-from pyrace.gateway.web import WebServer
+from pyrace.gateway.parseQuery import parseQuery
 from pyrace.shared.config import getConfig
 from pyrace.shared.logging import getLogger
 from sentry_sdk import capture_exception
@@ -37,31 +35,19 @@ class webRequestHandler(BaseHTTPRequestHandler):
         self.logger = logger
         super().__init__(*args)
 
-    def parseQuery(self):
-        try:
-            query = self.path.split("?")[1]
-            queryParts = query.split("&")
-            queryDict = {}
-            for part in queryParts:
-                key, value = part.split("=")
-                queryDict[key] = value
-            return queryDict
-        except Exception as e:
-            capture_exception(e)
-
     def do_GET(self):
         try:
             self.logger.info(
                 "== %s request for path: %s", str(self.command), str(self.path)
             )
-            self.logger.info("== Query: %s", self.parseQuery())
+            self.logger.info("== Query: %s", str(parseQuery(self.path)))
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write(b"Hello, world")
         except Exception as e:
             capture_exception(e)
-        
+
     def log_message(self, format: str, *args: str) -> None:
         self.logger.info(format, *args)
 
@@ -84,7 +70,6 @@ class GatewayServer(ServerBase):
             )
         except Exception as e:
             capture_exception(e)
-
 
     def start(self) -> None:
         """

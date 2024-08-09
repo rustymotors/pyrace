@@ -17,6 +17,7 @@
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
 
+
 def verifyLegacyCipherSupport():
     """
     Verifies the support for legacy ciphers.
@@ -27,9 +28,12 @@ def verifyLegacyCipherSupport():
     Returns:
         None
     """
-    key = os.urandom(16).hex()
-    dataCypher = Cipher(algorithms.ARC4(bytes.fromhex(key)), mode=None)
-    cmdCypher = Cipher(algorithms.TripleDES(bytes.fromhex(key)), modes.CBC(bytes.fromhex("0000000000000000")))
-    
-    
-
+    try:
+        key = os.urandom(16).hex()
+        _ = Cipher(algorithms.ARC4(bytes.fromhex(key)), mode=None)
+        _ = Cipher(
+            algorithms.TripleDES(bytes.fromhex(key)),
+            modes.CBC(bytes.fromhex("0000000000000000")),
+        )
+    except Exception as e:
+        raise Exception("Legacy cipher support is not available") from e
