@@ -25,6 +25,7 @@ from pyrace.gateway.console import ConsoleThread
 from pyrace.gateway.web import WebServer
 from pyrace.shared.config import getConfig
 from pyrace.shared.logging import getLogger
+from sentry_sdk import capture_exception
 
 
 def __onSocketConnection(socket, logger) -> None:
@@ -37,23 +38,29 @@ class webRequestHandler(BaseHTTPRequestHandler):
         super().__init__(*args)
 
     def parseQuery(self):
-        query = self.path.split("?")[1]
-        queryParts = query.split("&")
-        queryDict = {}
-        for part in queryParts:
-            key, value = part.split("=")
-            queryDict[key] = value
-        return queryDict
+        try:
+            query = self.path.split("?")[1]
+            queryParts = query.split("&")
+            queryDict = {}
+            for part in queryParts:
+                key, value = part.split("=")
+                queryDict[key] = value
+            return queryDict
+        except Exception as e:
+            capture_exception(e)
 
     def do_GET(self):
-        self.logger.info(
-            "== %s request for path: %s", str(self.command), str(self.path)
-        )
-        self.logger.info("== Query: %s", self.parseQuery())
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(b"Hello, world")
+        try:
+            self.logger.info(
+                "== %s request for path: %s", str(self.command), str(self.path)
+            )
+            self.logger.info("== Query: %s", self.parseQuery())
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"Hello, world")
+        except Exception as e:
+            capture_exception(e)
         
     def log_message(self, format: str, *args: str) -> None:
         self.logger.info(format, *args)
@@ -62,18 +69,22 @@ class webRequestHandler(BaseHTTPRequestHandler):
 class GatewayServer(ServerBase):
 
     def __init__(self, config, logger, portList, onSocketConnection) -> None:
-        self.shutdownRequested = False
-        self.config = config
-        self.logger = logger
-        self.portList = portList
-        self.onSocketConnection = onSocketConnection
-        self.webLogger = self.logger.getLogger("web")
-        self.loop = asyncio.get_event_loop()
+        try:
+            super().__init__("localhost", 3000)
+            self.shutdownRequested = False
+            self.config = config
+            self.logger = logger
+            self.portList = portList
+            self.onSocketConnection = onSocketConnection
+            self.webLogger = self.logger.getLogger("web")
+            self.loop = asyncio.get_event_loop()
 
-        self.logger.info(
-            "Starting gateway with the following configuration: %s", self.config
-        )
-        pass
+            self.logger.info(
+                "Starting gateway with the following configuration: %s", self.config
+            )
+        except Exception as e:
+            capture_exception(e)
+
 
     def start(self) -> None:
         """
@@ -84,36 +95,42 @@ class GatewayServer(ServerBase):
         Returns:
             None
         """
-        self.logger.info("Starting gateway")
+        try:
+            self.logger.info("Starting gateway")
 
-        self.consoleThread = ConsoleThread(
-            parentThread=self,
-            logger=self.logger.getLogger("console"),
-        )
-        self.consoleThread.start()
+            self.consoleThread = ConsoleThread(
+                parentThread=self,
+                logger=self.logger.getLogger("console"),
+            )
+            self.consoleThread.start()
 
-        self.logger.info("Started console thread")
+            self.logger.info("Started console thread")
 
-        self.webLogger.info("Starting web server")
-        self.httpServer = HTTPServer(
-            ("localhost", 3000),
-            lambda *args: webRequestHandler(self.webLogger, *args),
-        )
+            self.webLogger.info("Starting web server")
+            self.httpServer = HTTPServer(
+                ("localhost", 3000),
+                lambda *args: webRequestHandler(self.webLogger, *args),
+            )
 
-        # Wrap the serve_forever method in a lambda to allow it to be called by the asyncio event loop
+            # Wrap the serve_forever method in a lambda to allow it to be called by the asyncio event loop
 
-        self.httpServerThread = Thread(target=self.httpServer.serve_forever)
-        self.httpServerThread.start()
+            self.httpServerThread = Thread(target=self.httpServer.serve_forever)
+            self.httpServerThread.start()
 
-        self.webLogger.info("Started web server")
+            self.webLogger.info("Started web server")
 
-        self.run()
+            self.run()
+        except Exception as e:
+            capture_exception(e)
 
     def __stopWebServer(self):
-        self.webLogger.info("Stopping web server")
-        self.httpServer.shutdown()
-        self.httpServerThread.join()
-        self.webLogger.info("Stopped web server")
+        try:
+            self.webLogger.info("Stopping web server")
+            self.httpServer.shutdown()
+            self.httpServerThread.join()
+            self.webLogger.info("Stopped web server")
+        except Exception as e:
+            capture_exception(e)
 
     def stop(self) -> None:
         """
