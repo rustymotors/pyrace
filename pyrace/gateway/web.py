@@ -14,9 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from email.policy import HTTP
 from http.server import HTTPServer
-from unittest.mock import Base
 
 
 class WebServer(HTTPServer):
@@ -24,7 +22,8 @@ class WebServer(HTTPServer):
         self.isRunning = False
         self.shutdownRequested = False
         super().__init__(*args)
-    
+
+
 def server_activate(self):
     self.isRunning = True
     super(self).server_activate()

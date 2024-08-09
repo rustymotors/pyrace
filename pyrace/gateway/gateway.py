@@ -15,15 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
-from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
-from re import T
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
-from webbrowser import get
 
 from pyrace.base import ServerBase
 from pyrace.gateway.console import ConsoleThread
 from pyrace.gateway.parseQuery import parseQuery
-from pyrace.gateway.web import WebServer
 from pyrace.shared.config import getConfig
 from pyrace.shared.logging import getLogger
 from sentry_sdk import capture_exception
