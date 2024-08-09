@@ -25,7 +25,7 @@ test:
 	@pytest --cov=pyrace --cov-report=term-missing && python -m coverage xml
 
 install:
-	@poetry install
+	@pdm install
 
 start:
 	@python main.py
