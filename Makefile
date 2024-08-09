@@ -14,6 +14,13 @@ certs:
 	@cp ./data/mcouniverse.pem  ./data/private_key.pem ./services/sslProxy/
 	@echo "certs regenerated. remember to update pub.key for all clients"
 
+lint:
+	# stop the build if there are Python syntax errors or undefined names
+	@flake8 pyrace --count --select=E9,F63,F7,F82 --show-source --statistics
+	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+	@flake8 pyrace --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+
 test:
 	@pytest --cov=pyrace --cov-report=term-missing && python -m coverage xml
 
@@ -38,4 +45,4 @@ enable-net:
 clean:
 	@cargo clean
 
-.PHONY: all certs test build start up down enable-net clean
+.PHONY: all certs test build start up down enable-net clean lint
