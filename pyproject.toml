@@ -19,7 +19,7 @@ build-backend = "pdm.backend"
 authors = [{ name = "Molly Draven", email = "drazi@duck.com" }]
 requires-python = "<4.0,>=3.11"
 dependencies = [
-    "cryptography==43.0.0",
+    "cryptography==43.0.1",
     "sentry-sdk==2.15.0",
     "curtsies<1.0.0,>=0.4.2",
     "django<6.0.0,>=5.0.6",
